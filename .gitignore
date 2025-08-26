@@ -1,0 +1,15 @@
+# Python/venv
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Dagster local
+dagster_home/
+
+# Datos grandes o temporales
+data/*
+!data/tabla_perfilado.csv
+!data/reporte_covid.xlsx
+*.duckdb
+*.parquet
