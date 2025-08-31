@@ -13,3 +13,8 @@ data/*
 !data/reporte_covid.xlsx
 *.duckdb
 *.parquet
+
+# Dagster temp
+.tmp_dagster_home_*/
+# Downloads locales (no versionar datasets)
+downloads/
