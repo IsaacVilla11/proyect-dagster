@@ -37,3 +37,13 @@ def claves_no_nulas_y_unicidad(leer_datos: pd.DataFrame) -> AssetCheckResult:
             "population_<=0": int(pop_le0),
         },
     )
+
+@asset_check(asset="metrica_incidencia_7d", name="incidencia_rango_esperado")
+def incidencia_rango_esperado(metrica_incidencia_7d) -> AssetCheckResult:
+    import pandas as pd
+    df = metrica_incidencia_7d
+    fuera = df[(df["incidencia_7d"] < 0) | (df["incidencia_7d"] > 2000)]
+    return AssetCheckResult(
+        passed=fuera.empty,
+        metadata={"filas_fuera_rango": int(len(fuera))}
+    )
