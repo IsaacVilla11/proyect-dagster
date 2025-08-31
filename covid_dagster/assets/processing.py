@@ -23,19 +23,21 @@ def datos_procesados(context: AssetExecutionContext, leer_datos: pd.DataFrame) -
 
     df = leer_datos.copy()
 
-    # Asegurar columnas requeridas
     missing = [c for c in ESSENTIAL if c not in df.columns]
     if missing:
-        raise RuntimeError(
-            f"Faltan columnas obligatorias para el procesamiento: {missing}. "
-            "¿Estás usando el CSV canónico de OWID?"
-        )
+        raise RuntimeError(f"Faltan columnas obligatorias para el procesamiento: {missing}.")
 
     # Normalización de tipos
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     df["new_cases"] = pd.to_numeric(df["new_cases"], errors="coerce")
     df["people_vaccinated"] = pd.to_numeric(df["people_vaccinated"], errors="coerce")
     df["population"] = pd.to_numeric(df["population"], errors="coerce")
+
+    # Filtrar fechas futuras (seguridad para métricas)
+    today = pd.Timestamp.utcnow().date()
+    before_fut = len(df)
+    df = df[df["date"].dt.date <= today]
+    fut_removed = before_fut - len(df)
 
     # Eliminar duplicados por (country, date)
     before = len(df)
@@ -55,7 +57,8 @@ def datos_procesados(context: AssetExecutionContext, leer_datos: pd.DataFrame) -
 
     context.log.info(
         f"Procesado OK | países: {pais_ecuador}, {pais_cmp} | "
-        f"dup={dups_removed} | na_removed={na_removed} | filas_finales={len(df)}"
+        f"future_removed={fut_removed} | dup={dups_removed} | "
+        f"na_removed={na_removed} | filas_finales={len(df)}"
     )
 
     return df
