@@ -1,0 +1,2 @@
+n_filas,n_columnas,columnas,dtypes,min_new_cases,max_new_cases,pct_na_new_cases,pct_na_people_vaccinated,min_date,max_date
+4138,5,"['country, date, new_cases, people_vaccinated, population']","['country:object, date:datetime64[ns], new_cases:float64, people_vaccinated:float64, population:float64']",0.0,59470.0,0.01208313194780087,0.6094731754470759,2020-01-01,2025-12-28
